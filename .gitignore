@@ -1,0 +1,41 @@
+# IDE and Editor files
+.qodo
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Dependencies
+node_modules/
+venv/
+__pycache__/
+*.pyc
+
+# Environment variables
+.env
+.env.local
+.env.development
+.env.test
+.env.production
+
+# Build files
+/build/
+/dist/
+*.log
+
+# Uploaded and generated files
+backend/uploads/
+backend/starred_images/
+
+# Database
+*.sqlite
+*.db
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
