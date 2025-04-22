@@ -1,5 +1,6 @@
 import os
 import datetime
+import requests
 from flask import Flask, request, jsonify, session
 from flask_cors import CORS
 from werkzeug.utils import secure_filename
@@ -23,6 +24,7 @@ app.secret_key = os.getenv('SECRET_KEY', 'default-secret-key')
 app.config['UPLOAD_FOLDER'] = 'uploads'
 app.config['ALLOWED_EXTENSIONS'] = {'png', 'jpg', 'jpeg'}
 app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024  # 16MB max upload size
+app.config['ML_SERVICE_URL'] = os.getenv('ML_SERVICE_URL', 'http://localhost:8001')
 
 # Ensure upload directory exists
 os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
@@ -67,24 +69,6 @@ class JSONEncoder(json.JSONEncoder):
 def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in app.config['ALLOWED_EXTENSIONS']
 
-def validate_brain_image(image_path):
-    """Use Gemini to check if image is appropriate for brain tumor detection"""
-    try:
-        model = genai.GenerativeModel('gemini-2.0-flash-exp-image-generation')
-        prompt = "Is this image appropriate for brain tumor detection? Give answer only yes or no."
-        
-        image = Image.open(image_path)
-        response = model.generate_content([prompt, image])
-        
-        # Extract only 'yes' or 'no' from the response
-        response_text = response.text.lower().strip()
-        is_appropriate = 'yes' in response_text and 'no' not in response_text
-        
-        return is_appropriate
-    except Exception as e:
-        print(f"Error validating image with Gemini: {e}")
-        return False
-
 def save_image(file):
     """Save uploaded image and return the file path"""
     filename = secure_filename(file.filename)
@@ -100,11 +84,40 @@ def image_to_base64(image_path):
 
 def process_with_ml_model(image_path):
     """
-    Process image with ML model
-    This is a placeholder for the actual ML model integration
+    Process image with ML model by calling the FastAPI ML service
     """
-    # Placeholder ML model results
-    results = {
+    try:
+        # Prepare the image file for sending to the ML service
+        with open(image_path, 'rb') as img_file:
+            files = {'file': (os.path.basename(image_path), img_file, 'image/jpeg')}
+            
+            # Call the ML service
+            response = requests.post(
+                f"{app.config['ML_SERVICE_URL']}/predict", 
+                files=files
+            )
+            
+            if response.status_code == 200:
+                result = response.json()
+                
+                # If image is not appropriate
+                if not result.get("is_appropriate", True):
+                    return None, False
+                
+                # Return the ML results
+                return result.get("ml_results", {}), True
+            else:
+                print(f"ML service error: {response.status_code} - {response.text}")
+                # Fallback prediction if ML service fails
+                return fallback_prediction(), True
+    except Exception as e:
+        print(f"Error calling ML service: {e}")
+        # Fallback prediction if ML service fails
+        return fallback_prediction(), True
+
+def fallback_prediction():
+    """Fallback prediction if ML service is unavailable"""
+    return {
         "prediction": "Positive",
         "confidence": 0.85,
         "tumor_type": "Meningioma",
@@ -120,7 +133,6 @@ def process_with_ml_model(image_path):
             "Regular monitoring"
         ]
     }
-    return results
 
 # Routes
 @app.route('/api/register', methods=['POST'])
@@ -186,8 +198,8 @@ def upload_image():
         # Save the uploaded image
         file_path, unique_filename = save_image(file)
         
-        # Check if image is appropriate for brain tumor detection using Gemini
-        is_appropriate = validate_brain_image(file_path)
+        # Process with ML model
+        ml_results, is_appropriate = process_with_ml_model(file_path)
         
         if not is_appropriate:
             # Remove the file if it's not appropriate
@@ -195,9 +207,6 @@ def upload_image():
             return jsonify({
                 "error": "Please upload an appropriate brain MRI or CT scan image for tumor detection"
             }), 400
-        
-        # Process with ML model if appropriate
-        ml_results = process_with_ml_model(file_path)
         
         # Convert image to base64 for storage
         image_base64 = image_to_base64(file_path)
@@ -438,4 +447,4 @@ def debug_collections(user_id):
         return jsonify({"error": f"Debug error: {str(e)}"}), 500
 
 if __name__ == '__main__':
-    app.run(debug=True) 
+    app.run(debug=True)
