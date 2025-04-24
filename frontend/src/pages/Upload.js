@@ -471,7 +471,7 @@ const Upload = () => {
                     </h3>
                   </div>
 
-                  {results.prediction === 'Positive' && (
+                  {/* {results.prediction === 'Positive' && (
                     <>
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
                         <div>
@@ -502,14 +502,14 @@ const Upload = () => {
                         </ul>
                       </div>
                     </>
-                  )}
+                  )} */}
 
-                  <div className="mt-6">
+                  {/* <div className="mt-6">
                     <p className="text-sm text-gray-500 dark:text-gray-400">
                       <strong className="text-gray-700 dark:text-gray-300">Important:</strong> This is an AI-assisted analysis and should not replace professional medical diagnosis. 
                       Please consult with a healthcare professional regarding these results.
                     </p>
-                  </div>
+                  </div> */}
                 </div>
               </div>
             </div>

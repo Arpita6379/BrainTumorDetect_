@@ -239,25 +239,7 @@ const History = () => {
                         Uploaded on {formatDate(selectedImage.upload_time)}
                       </p>
                       <div className="p-6">
-                        <div className="mb-6">
-                          <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-2">Analysis Results</h3>
-                          <div className="bg-white dark:bg-gray-700 rounded-lg p-4">
-                            <dl className="grid grid-cols-1 gap-4">
-                              <div>
-                                <dt className="text-sm font-medium text-gray-500 dark:text-gray-400">Tumor Detection</dt>
-                                <dd className="mt-1 text-lg font-semibold text-gray-900 dark:text-white">
-                                  {selectedImage.ml_results.tumor_detected ? 'Detected' : 'Not Detected'}
-                                </dd>
-                              </div>
-                              <div>
-                                <dt className="text-sm font-medium text-gray-500 dark:text-gray-400">Confidence Score</dt>
-                                <dd className="mt-1 text-lg font-semibold text-gray-900 dark:text-white">
-                                  {(selectedImage.ml_results.confidence * 100).toFixed(2)}%
-                                </dd>
-                              </div>
-                            </dl>
-                          </div>
-                        </div>
+                        
 
                         {selectedImage.ml_results.tumor_detected && (
                           <>
@@ -281,13 +263,13 @@ const History = () => {
                           </>
                         )}
 
-                        <div className="mt-6">
+                        {/* <div className="mt-6">
                           <p className="text-sm text-gray-500 dark:text-gray-400">
                             <strong className="text-gray-700 dark:text-gray-300">Important:</strong> This is an AI-assisted analysis and should not replace 
                             professional medical diagnosis. Please consult with a healthcare professional 
                             regarding these results.
                           </p>
-                        </div>
+                        </div> */}
                       </div>
                     </div>
                     <div className="p-6">
@@ -315,7 +297,7 @@ const History = () => {
                               </h3>
                             </div>
 
-                            {selectedImage.ml_results.prediction === 'Positive' && (
+                            {/* {selectedImage.ml_results.prediction === 'Positive' && (
                               <>
                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
                                   <div>
@@ -346,15 +328,15 @@ const History = () => {
                                   </ul>
                                 </div>
                               </>
-                            )}
+                            )} */}
 
-                            <div className="mt-6">
+                            {/* <div className="mt-6">
                               <p className="text-sm text-gray-500 dark:text-gray-400">
                                 <strong className="text-gray-700 dark:text-gray-300">Important:</strong> This is an AI-assisted analysis and should not replace 
                                 professional medical diagnosis. Please consult with a healthcare professional 
                                 regarding these results.
                               </p>
-                            </div>
+                            </div> */}
                           </div>
                         </div>
                       </div>

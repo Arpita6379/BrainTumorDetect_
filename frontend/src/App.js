@@ -75,22 +75,22 @@ function App() {
             <Route path="*" element={<Navigate to="/" />} />
           </Routes>
         </main>
-        <footer className="bg-gray-900 text-white py-6">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="flex flex-col md:flex-row justify-between items-center">
-              <div className="flex items-center">
-                <span className="text-2xl">🧠</span>
-                <span className="ml-2 text-lg font-semibold">BrainScan AI</span>
-              </div>
-              <div className="mt-4 md:mt-0 text-sm text-gray-400">
-                <p className="mb-1">© 2025 BrainScan AI. All rights reserved.</p>
-                <p className="text-gray-500">
-                  Disclaimer: This is an AI-assisted tool and should not replace professional medical diagnosis.
-                </p>
-              </div>
-            </div>
+        {/* <footer className="bg-gray-900 text-white py-6">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="flex flex-col md:flex-row justify-between items-center">
+          <div className="flex items-center">
+            <span className="text-2xl">🧠</span>
+            <span className="ml-2 text-lg font-semibold">BrainScan AI</span>
           </div>
-        </footer>
+          <div className="mt-4 md:mt-0 text-sm text-gray-400">
+            <p className="mb-1">© 2025 BrainScan AI. All rights reserved.</p>
+            <p className="text-gray-500">
+              Disclaimer: This is an AI-assisted tool and should not replace professional medical diagnosis.
+            </p>
+          </div>
+        </div>
+      </div>
+    </footer> */}
       </div>
     </Router>
   );
